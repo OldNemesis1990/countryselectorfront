@@ -1,38 +1,18 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import PageLayout from "../Layout/PageLayout";
 import axios from "axios";
 import CheckBox from "../Components/CheckBox";
 import Input from "../Components/Input";
 import Chart from "../Components/Chart";
+import { CountryContext } from "../Components/CountryContext";
 
 export default function Creative() {
-    const [data, setData] = useState([]);
-    const [defaultData,setdefaultData] = useState([]);
+    const { setData, data, defaultData, loading, error } = useContext(CountryContext)
     const [searchTerm, setSearchTerm] = useState('');
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
     const [selectedCountries, setSelectedCountries] = useState([]);
     const [chartData, setChartData] = useState([]);
 
     const debounceTimeoutRef = useRef(null);
-
-    // Fetch Country Data
-    const fetchData = async () => {
-        try {
-            const response = await axios.get('https://leebaartman.alwaysdata.net/backend/public/api/countries');
-            setData(response.data.countries);
-            setdefaultData(response.data.countries);
-        } catch (err) {
-            setError(err); 
-            console.error("Error fetching data:", err);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        fetchData();
-    }, []);
 
     useEffect(() => {
         if (debounceTimeoutRef.current) {
